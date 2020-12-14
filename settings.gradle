@@ -1,0 +1,3 @@
+include ':trizigzaglineview'
+include ':app'
+rootProject.name = "LinkedTriZigZagLineView"
