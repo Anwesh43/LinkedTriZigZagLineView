@@ -222,4 +222,13 @@ class TriZigZagLineView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : TriZigZagLineView {
+            val view : TriZigZagLineView = TriZigZagLineView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
