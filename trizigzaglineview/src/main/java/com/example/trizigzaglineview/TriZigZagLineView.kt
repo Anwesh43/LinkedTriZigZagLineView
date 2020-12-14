@@ -7,14 +7,16 @@ import android.graphics.Paint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.PointF
 
 val parts : Int = 3
+val mainParts : Int = 2
 val lineParts : Int = 3
 val triParts : Int = 2
-val scGap : Float = 0.02f / parts
+val scGap : Float = 0.02f / (parts)
 val strokeFactor : Float = 90f
 val delay : Long = 20
-val sizeFactor : Float = 3.8f
+val sizeFactor : Float = 6.8f
 val colors : Array<Int> = arrayOf(
     "#F44336",
     "#2196F3",
@@ -29,16 +31,22 @@ val backColor : Int = Color.parseColor("#BDBDBD")
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
+fun PointF.distance(p : PointF) : Float = Math.sqrt(
+    Math.pow((p.x - x).toDouble(), 2.0) + Math.pow((p.y - y).toDouble(), 2.0)
+).toFloat()
 
 fun Canvas.drawEndingLine(xSize : Float, ySize : Float, sc1 : Float, sc2 : Float, paint : Paint) {
+    if (PointF(xSize * sc1, ySize * sc1).distance(PointF(xSize * sc2, ySize * sc2)) < 0.1f) {
+        return
+    }
     drawLine(xSize * sc2, ySize * sc2, xSize * sc1, ySize * sc1, paint)
 }
 
 fun Canvas.drawTriZigZagLine(scale : Float, w : Float, h : Float, paint : Paint) {
-    val sc1 : Float = scale.divideScale(0, parts)
-    val sc2 : Float = scale.divideScale(1, parts)
+    val sc1 : Float = scale.divideScale(0, mainParts)
+    val sc2 : Float = scale.divideScale(1, mainParts)
     val size : Float = Math.min(w, h) / sizeFactor
-    val gap : Float = size / (2 * lineParts)
+    val gap : Float = size / lineParts
     save()
     translate(w / 2 - 2 * size, h / 2)
     drawEndingLine(size, 0f, sc1.divideScale(0, parts), sc2.divideScale(0, parts), paint)
